@@ -1,0 +1,76 @@
+[tool.poetry]
+name = "oes-interview"
+version = "0.1.0"
+description = ""
+authors = []
+readme = "README.md"
+packages = [{ include = "oes", from = "src" }]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.11"
+
+# Dependencies just to create/validate interview state
+pynacl = "^1.5.0"
+attrs = "^22.2.0"
+
+# Dependencies to work with the interview process
+jinja2 = { version = "^3.1.2", optional = true }
+pyparsing = { version = "^3.0.9", optional = true }
+importlib-metadata = { version = "^6.0.0", optional = true }
+loguru = { version = "^0.6.0", optional = true }
+ruamel-yaml = { version = "^0.17.21", optional = true }
+# TODO: proper versioning of this
+oes-template = { git = "https://github.com/Open-Event-Systems/template.git", branch = "main" }
+
+# Dependencies to run the interview service
+uvicorn = { version = "^0.20.0", extras = ["standard"], optional = true }
+blacksheep = {version = "^1.2.12", optional = true}
+cattrs = "^22.2.0"
+orjson = "^3.8.8"
+typed-settings = {version = "^23.0.0", optional = true}
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.2.1"
+pytest-cov = "^4.0.0"
+httpx = { version = "^0.23.3" }
+myst-parser = "^0.18.1"
+sphinx = "^5.3.0"
+sphinx-rtd-theme = "^1.1.1"
+pytest-asyncio = "^0.21.0"
+
+[tool.poetry.extras]
+advanced = [
+    "jinja2",
+    "pyparsing",
+    "importlib-metadata",
+    "loguru",
+    "ruamel-yaml"
+]
+server = [
+    "jinja2",
+    "pyparsing",
+    "importlib-metadata",
+    "loguru",
+    "ruamel-yaml",
+    "blacksheep",
+    "python-multipart",
+    "typed-settings",
+    "uvicorn"
+]
+
+[tool.mypy]
+python_version = "3.9"
+namespace_packages = true
+explicit_package_bases = true
+mypy_path = "$MYPY_CONFIG_FILE_DIR/src"
+
+# Field entry points
+[tool.poetry.plugins."oes.interview.field"]
+text = "oes.interview.config.fields.text:TextField"
+number = "oes.interview.config.fields.number:NumberField"
+select = "oes.interview.config.fields.select:SelectField"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

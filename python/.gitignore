@@ -1,0 +1,4 @@
+.*_cache
+.coverage
+/docs/build
+/docs/source/api
