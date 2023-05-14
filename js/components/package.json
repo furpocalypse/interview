@@ -1,7 +1,9 @@
 {
   "name": "@oes/interview-components",
   "version": "0.1.0",
-  "description": "",
+  "description": "OES Interview React components",
+  "license": "LGPL-3.0-or-later",
+  "author": "Wes <wes@anthronewengland.com>",
   "type": "module",
   "exports": {
     ".": "./dist/index.js",
@@ -50,8 +52,6 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
-  "author": "",
-  "license": "UNLICENSED",
   "dependencies": {
     "@oes/interview-lib": "^0.1.0",
     "markdown-it": "^13.0.1",

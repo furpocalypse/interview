@@ -1,8 +1,9 @@
 [tool.poetry]
 name = "oes-interview"
 version = "0.1.0"
-description = ""
-authors = []
+description = "OES Interview Python library"
+authors = ["Wes <wes@anthronewengland.com>"]
+license = "LGPL-3.0-or-later"
 readme = "README.md"
 packages = [{ include = "oes", from = "src" }]
 
