@@ -1,30 +1,25 @@
-FROM pypy:3.9-7.3.11-slim AS base
+FROM python:3.9.16-alpine3.18 AS base
 
 FROM base AS build
-
-RUN apt-get update \
-    && apt-get install -y build-essential \
-    && apt-get clean
-
-WORKDIR /app
-RUN pip install --no-cache --upgrade poetry
+RUN apk add git build-base
+WORKDIR /build
+RUN pip install --no-cache-dir --upgrade poetry wheel
+RUN mkdir /app \
+    && python -m venv /app
 COPY pyproject.toml poetry.lock ./
-RUN poetry export -E server -o requirements.txt \
-    && python -m venv ./venv \
-    && ./venv/bin/pip install --no-cache-dir wheel \
-    && ./venv/bin/pip install --no-cache-dir -r requirements.txt
+# hack: exclude oes-* dependencies due to git repos not having hashes
+RUN poetry export -E server | grep -v ^oes > requirements.txt
+RUN pip wheel -w deps -r requirements.txt
+RUN /app/bin/pip install deps/*
 COPY README.md ./
 COPY src/ src/
-RUN poetry build \
-    && ./venv/bin/pip install --no-cache-dir ./dist/*.whl
+RUN /app/bin/pip install .[server]
 
 FROM base AS target
-
-RUN useradd --no-create-home -d /app -r -U app
-RUN mkdir /config
-COPY --from=build /app/venv/ /app/venv/
-WORKDIR /app
-USER app
-ENV CONFIG_FILE=/config/interviews.yml
-ENTRYPOINT [ "/app/venv/bin/uvicorn", "oes.interview.server.app:app" ]
+RUN adduser -h /app -H -D python \
+    && mkdir /config
+COPY --from=build /app/ /app/
+WORKDIR /config
+USER python
+ENTRYPOINT [ "/app/bin/uvicorn", "oes.interview.server.app:app" ]
 CMD [ "--host", "0.0.0.0" ]
