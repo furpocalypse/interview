@@ -14,6 +14,8 @@ app = Application()
 docs = OpenAPIHandler(info=Info(title="OES Interview Service", version="0.1"))
 docs.bind_app(app)
 
+app.use_cors(allow_origins="*")
+
 
 @app.on_start
 async def on_start(app: Application):
