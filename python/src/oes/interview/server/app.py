@@ -48,6 +48,7 @@ def _configure_forwarded_headers(app: Application):
 @app.on_start
 async def on_start(app: Application):
     settings = load_settings()
+    app.base_path = settings.root_path
     app.services.add_instance(settings)
 
     interviews = load_interview_config(settings.config_file)

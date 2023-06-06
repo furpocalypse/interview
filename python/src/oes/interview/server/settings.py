@@ -13,6 +13,7 @@ def _load_key_file(settings):
 
 @ts.settings
 class Settings:
+    root_path: str = ""
     encryption_key_file: Path = Path("encryption_key")
     config_file: Path = Path("interviews.yml")
     encryption_key: ts.Secret[bytes] = ts.secret(
