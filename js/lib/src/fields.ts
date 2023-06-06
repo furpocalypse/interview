@@ -170,25 +170,37 @@ const getSelectValidator = (field: SelectField): FieldValidator => {
 
   const optionType = yup.number().integer().oneOf(optionValues).required()
 
-  const filterUniqueItems = (v: number[] | undefined) => {
-    if (v == null) {
-      return v
+  if (field.max == 1) {
+    let schema = yup
+      .number()
+      .integer()
+      .label(field.label ?? "Field")
+      .oneOf(optionValues)
+
+    if (field.min != 0) {
+      schema = schema.required()
     }
-    const set = new Set<number>(v)
-    return [...set]
+    return yupValidator(schema)
+  } else {
+    const schema = yup
+      .array()
+      .of(optionType)
+      .label(field.label ?? "Field")
+      .transform(filterUniqueItems)
+      .min(field.min)
+      .max(field.max)
+      .required()
+
+    return yupValidator(schema)
   }
+}
 
-  let schema = yup
-    .array()
-    .of(optionType)
-    .label(field.label ?? "Field")
-    .transform(filterUniqueItems)
-    .min(field.min)
-    .max(field.max)
-
-  schema = field.optional ? schema : schema.required()
-
-  return yupValidator(schema)
+const filterUniqueItems = (v: number[] | undefined) => {
+  if (v == null) {
+    return v
+  }
+  const set = new Set<number>(v)
+  return [...set]
 }
 
 registerFieldType("text", getTextValidator)

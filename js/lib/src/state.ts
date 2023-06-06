@@ -144,7 +144,12 @@ export class FormState {
       const field = fields[key]
       const validator = getFieldValidator(field)
       const initialValue = initialValues ? initialValues[key] : undefined
-      const state = new FieldState(field, validator, initialValue)
+      const defaultValue = field.default != null ? field.default : undefined
+      const state = new FieldState(
+        field,
+        validator,
+        initialValue ?? defaultValue
+      )
       states[key] = state
     }
 

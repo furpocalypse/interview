@@ -5,7 +5,7 @@ from typing import Any, Optional
 
 from attrs import evolve
 from oes.interview.config.question import Question
-from oes.interview.config.question_bank import QuestionBank
+from oes.interview.config.question_bank import QuestionBank, question_bank_context
 from oes.interview.config.step import Step, StepResult, StepResultStatus
 from oes.interview.parsing.location import Location, UndefinedError
 from oes.interview.response import AskResult
@@ -175,9 +175,14 @@ def advance_interview_state(
 
     state = _apply_responses(state, questions, responses, button)
 
-    # process all steps in order. repeat every time a change is made.
-    result: StepResult = StepResultStatus.changed
-    while result is StepResultStatus.changed:
-        state, result = _process_steps(state, questions)
+    # set question bank context
+    token = question_bank_context.set(questions)
+    try:
+        # process all steps in order. repeat every time a change is made.
+        result: StepResult = StepResultStatus.changed
+        while result is StepResultStatus.changed:
+            state, result = _process_steps(state, questions)
+    finally:
+        question_bank_context.reset(token)
 
     return state, result
