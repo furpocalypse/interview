@@ -27,8 +27,15 @@ app.use_cors(
 )
 
 
+async def _set_base_path(request, handler):
+    """Middleware to set root_path from uvicorn."""
+    request.base_path = request.scope.get("root_path", "")
+    return await handler(request)
+
+
 @app.on_middlewares_configuration
 def _configure_forwarded_headers(app: Application):
+    app.middlewares.insert(0, _set_base_path)
     app.middlewares.insert(
         0,
         XForwardedHeadersMiddleware(
@@ -48,7 +55,6 @@ def _configure_forwarded_headers(app: Application):
 @app.on_start
 async def on_start(app: Application):
     settings = load_settings()
-    app.base_path = settings.root_path
     app.services.add_instance(settings)
 
     interviews = load_interview_config(settings.config_file)

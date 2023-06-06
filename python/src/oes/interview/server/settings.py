@@ -1,4 +1,5 @@
 """Server settings."""
+import base64
 from pathlib import Path
 
 import typed_settings as ts
@@ -8,12 +9,13 @@ from attrs import Factory
 def _load_key_file(settings):
     if settings.encryption_key_file is not None:
         with settings.encryption_key_file.open("rb") as f:
-            return ts.Secret(f.read())
+            b64_bytes = f.read()
+            bytes_ = base64.b64decode(b64_bytes)
+            return ts.Secret(bytes_)
 
 
 @ts.settings
 class Settings:
-    root_path: str = ""
     encryption_key_file: Path = Path("encryption_key")
     config_file: Path = Path("interviews.yml")
     encryption_key: ts.Secret[bytes] = ts.secret(
