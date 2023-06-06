@@ -1,6 +1,9 @@
 """Server application."""
+from ipaddress import IPv4Network, IPv6Network
+
 from blacksheep import Application
 from blacksheep.server.openapi.v3 import OpenAPIHandler
+from blacksheep.server.remotes.forwarding import XForwardedHeadersMiddleware
 from oes.interview.config.interview import (
     InterviewConfig,
     interviews_context,
@@ -22,6 +25,24 @@ app.use_cors(
         "Content-Type",
     ),
 )
+
+
+@app.on_middlewares_configuration
+def _configure_forwarded_headers(app: Application):
+    app.middlewares.insert(
+        0,
+        XForwardedHeadersMiddleware(
+            # Allow X-Forwarded headers from private networks
+            known_networks=[
+                IPv4Network("127.0.0.0/8"),
+                IPv4Network("10.0.0.0/8"),
+                IPv4Network("172.16.0.0/12"),
+                IPv4Network("192.168.0.0/16"),
+                IPv6Network("fc00::/7"),
+                IPv6Network("::1/128"),
+            ]
+        ),
+    )
 
 
 @app.on_start
