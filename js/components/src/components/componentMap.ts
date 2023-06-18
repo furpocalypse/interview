@@ -3,6 +3,7 @@ import { ComponentType } from "react"
 import { NumberField } from "#src/components/fields/NumberField.js"
 import { SelectField } from "#src/components/fields/SelectField.js"
 import { TextField } from "#src/components/fields/TextField.js"
+import { EmailField } from "#src/components/fields/EmailField.js"
 
 /**
  * The common props for every question field component.
@@ -35,5 +36,6 @@ export const registerFieldComponent = (
 }
 
 registerFieldComponent("text", TextField)
+registerFieldComponent("email", EmailField)
 registerFieldComponent("number", NumberField)
 registerFieldComponent("select", SelectField)

@@ -15,7 +15,7 @@ const numberFieldStyles = createStyles({ root: {} })
 export type NumberFieldProps = {
   name: string
 } & DefaultProps<Selectors<typeof numberFieldStyles>> &
-  Omit<NumberInputProps, "value" | "onChange" | "onBlur">
+  Omit<NumberInputProps, "value" | "onChange" | "onBlur" | "styles">
 
 /**
  * The component for a number field.

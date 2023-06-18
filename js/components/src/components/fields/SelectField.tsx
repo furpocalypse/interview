@@ -55,7 +55,7 @@ const selectStyles = createStyles({ root: {} })
 export type DropdownSelectFieldProps = {
   name: string
 } & DefaultProps<Selectors<typeof selectStyles>> &
-  Omit<SelectProps, "data" | "onChange" | "onBlur" | "value">
+  Omit<SelectProps, "data" | "onChange" | "onBlur" | "value" | "styles">
 
 /**
  * A dropdown select component.

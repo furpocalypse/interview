@@ -10,24 +10,24 @@ import { observer } from "mobx-react-lite"
 import { useContext } from "react"
 import { InterviewFormContext } from "#src/components/form/Form.js"
 
-const textStyles = createStyles(() => ({ root: {} }))
+const useStyles = createStyles(() => ({ root: {} }))
 
-export type TextFieldProps = {
+export type EmailFieldProps = {
   name: string
-} & DefaultProps<Selectors<typeof textStyles>> &
+} & DefaultProps<Selectors<typeof useStyles>> &
   Omit<
     TextInputProps,
     "name" | "error" | "value" | "onChange" | "onBlur" | "styles"
   >
 
 /**
- * Component for a text field.
+ * Component for an email field.
  */
-export const TextField = observer((props: TextFieldProps) => {
+export const EmailField = observer((props: EmailFieldProps) => {
   const { name, className, classNames, styles, unstyled, ...other } =
-    useComponentDefaultProps("OESITextField", {}, props)
-  const { cx, classes } = textStyles(undefined, {
-    name: "OESITextField",
+    useComponentDefaultProps("OESIEmailField", {}, props)
+  const { cx, classes } = useStyles(undefined, {
+    name: "OESIEmailField",
     classNames,
     styles,
     unstyled,
@@ -41,8 +41,6 @@ export const TextField = observer((props: TextFieldProps) => {
 
   const value = state.value != null ? state.value.toString() : ""
   const errorMessage = state.showError ? state.error : undefined
-  const autoComplete = state.fieldInfo.autocomplete ?? undefined
-  const inputMode = state.fieldInfo.input_mode ?? undefined
 
   return (
     <TextInput
@@ -50,8 +48,8 @@ export const TextField = observer((props: TextFieldProps) => {
       label={state.fieldInfo.label || undefined}
       required={!state.fieldInfo.optional}
       withAsterisk={!state.fieldInfo.optional}
-      autoComplete={autoComplete}
-      inputMode={inputMode as TextFieldProps["inputMode"]}
+      autoComplete="email"
+      inputMode="email"
       {...other}
       error={errorMessage}
       value={value}
@@ -65,4 +63,4 @@ export const TextField = observer((props: TextFieldProps) => {
   )
 })
 
-TextField.displayName = "TextField"
+EmailField.displayName = "EmailField"

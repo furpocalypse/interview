@@ -62,6 +62,10 @@ interface TextField extends AskFieldBase {
 interface EmailField extends AskFieldBase {
   type: "email"
   default?: string | null
+
+  // not actually used...
+  input_mode?: string | null
+  autocomplete?: string | null
 }
 
 interface NumberField extends AskFieldBase {
