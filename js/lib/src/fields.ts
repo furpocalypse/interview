@@ -151,9 +151,18 @@ const getTextValidator = (field: TextField): FieldValidator => {
 }
 
 const getEmailValidator = (field: EmailField): FieldValidator => {
-  let schema = yup
-    .string()
-    .label(field.label ?? "Field")
+  let schema = yup.string().label(field.label ?? "Field")
+
+  // trim
+  schema = schema.transform((v) => {
+    if (typeof v === "string") {
+      return v.trim()
+    } else {
+      return v
+    }
+  })
+
+  schema = schema
     .test("test-email", "Invalid email", (value) => {
       return !value || EmailValidator.validate(value)
     })
