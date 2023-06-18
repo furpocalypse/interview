@@ -14,7 +14,6 @@ if TYPE_CHECKING:
     from oes.interview.parsing.location import Location
     from oes.template import Template
 
-
 DEFAULT_MAX_FIELD_LENGTH = 300
 """Default max length of a text field."""
 
@@ -129,6 +128,11 @@ class FieldBase(AbstractField, ABC):
             return Optional[self.get_python_type()]
         else:
             return self.get_python_type()
+
+    def validate_required(self, i, a, v):
+        """Re-usable validator for checking for required values."""
+        if not self.optional and v is None:
+            raise ValueError(f"{a.name}: a value is required")
 
 
 def get_field_name(idx: int, field: AbstractField) -> str:

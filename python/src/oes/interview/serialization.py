@@ -1,4 +1,5 @@
 from collections.abc import Sequence
+from datetime import date
 from typing import Any, Optional, Tuple, Union, get_args, get_origin
 
 from attrs import Attribute, fields
@@ -82,6 +83,19 @@ def structure_without_cast(v, t):
 
 for cls in (int, float, str, bool):
     converter.register_structure_hook(cls, structure_without_cast)
+
+
+# handle dates
+def structure_date(v, t):
+    if isinstance(v, date):
+        return v
+    elif isinstance(v, str):
+        return date.fromisoformat(v)
+    else:
+        raise TypeError(f"Invalid date: {v}")
+
+
+converter.register_structure_hook(date, structure_date)
 
 
 # Var location
