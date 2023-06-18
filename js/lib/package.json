@@ -6,10 +6,20 @@
   "author": "Wes <wes@anthronewengland.com>",
   "type": "module",
   "exports": {
-    ".": "./dist/index.js"
+    ".": {
+      "webpack": [
+        "./src/index.ts",
+        "./dist/index.js"
+      ],
+      "default": "./dist/index.js"
+    }
   },
   "imports": {
     "#src/*.js": {
+      "webpack": [
+        "./src/*.ts",
+        "./dist/*.js"
+      ],
       "test": "./src/*.ts",
       "default": "./dist/*.js"
     }

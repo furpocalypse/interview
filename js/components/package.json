@@ -6,16 +6,27 @@
   "author": "Wes <wes@anthronewengland.com>",
   "type": "module",
   "exports": {
-    ".": "./dist/index.js",
-    "./*": "./dist/*"
+    ".": {
+      "webpack": [
+        "./src/index.ts",
+        "./dist/index.js"
+      ],
+      "default": "./dist/index.js"
+    },
+    "./*.js": {
+      "webpack": [
+        "./src/*.tsx",
+        "./src/*.ts",
+        "./dist/*.js"
+      ],
+      "default": "./dist/*"
+    }
   },
   "imports": {
     "#src/*.js": {
       "webpack": [
-        "./dist/*.js",
         "./src/*.tsx",
-        "./src/*.ts",
-        "./src/*.js"
+        "./src/*.ts"
       ],
       "default": "./dist/*.js"
     }

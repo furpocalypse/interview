@@ -1,4 +1,5 @@
 import type { StorybookConfig } from "@storybook/react-webpack5"
+import path from "path"
 
 const config: StorybookConfig = {
   stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|ts|tsx)"],
@@ -13,6 +14,28 @@ const config: StorybookConfig = {
   },
   docs: {
     autodocs: "tag",
+  },
+  webpackFinal(config, options) {
+    return {
+      ...config,
+      module: {
+        ...config.module,
+        rules: [
+          ...(config.module?.rules ?? []),
+          {
+            include: [path.resolve("../lib")],
+            use: [
+              {
+                loader: "babel-loader",
+                options: {
+                  presets: ["@babel/preset-env", "@babel/preset-typescript"],
+                },
+              },
+            ],
+          },
+        ],
+      },
+    }
   },
 }
 export default config
