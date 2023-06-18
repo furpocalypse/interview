@@ -4,8 +4,6 @@ import {
   Modal,
   ModalProps,
   Selectors,
-  Title,
-  TitleProps,
   useComponentDefaultProps,
 } from "@mantine/core"
 import { FormValues, InterviewStateStore } from "@oes/interview-lib"
@@ -40,11 +38,6 @@ export type InterviewDialogProps = {
   onSubmit: (values: FormValues, button: number | null) => Promise<void>
 
   /**
-   * Props passed down to the Title component.
-   */
-  titleProps?: Partial<TitleProps>
-
-  /**
    * Props passed down to the {@link QuestionView} component.
    */
   questionViewProps?: Partial<QuestionViewProps>
@@ -69,7 +62,6 @@ export const InterviewDialog = observer((props: InterviewDialogProps) => {
     stateStore,
     onSubmit,
     onClose,
-    titleProps,
     questionViewProps,
     exitViewProps,
     ...other
@@ -122,13 +114,7 @@ export const InterviewDialog = observer((props: InterviewDialogProps) => {
       className={cx(classes.root, className)}
       {...other}
       onClose={onClose}
-      title={
-        content?.title ? (
-          <Title className={classes.title} order={5} {...titleProps}>
-            {content.title}
-          </Title>
-        ) : undefined
-      }
+      title={content?.title ? content.title : undefined}
     >
       {children}
     </Modal>
