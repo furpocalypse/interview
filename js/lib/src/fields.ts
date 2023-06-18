@@ -5,6 +5,8 @@ import {
   FieldValidatorFactory,
 } from "#src/types.js"
 import * as yup from "yup"
+import * as EmailValidator from "email-validator"
+import * as psl from "psl"
 
 /**
  * Object mapping field types to validators.
@@ -57,6 +59,11 @@ interface TextField extends AskFieldBase {
   autocomplete?: string | null
 }
 
+interface EmailField extends AskFieldBase {
+  type: "email"
+  default?: string | null
+}
+
 interface NumberField extends AskFieldBase {
   type: "number"
   default?: number | null
@@ -81,6 +88,7 @@ interface SelectField extends AskFieldBase {
 declare module "#src/types.js" {
   interface AskFieldTypes {
     text: TextField
+    email: EmailField
     number: NumberField
     select: SelectField
   }
@@ -132,6 +140,29 @@ const getTextValidator = (field: TextField): FieldValidator => {
     const re = new RegExp(field.regex)
     schema = schema.matches(re, { message: "Enter a valid value." })
   }
+
+  schema = field.optional ? schema : schema.required()
+
+  return yupValidator(schema)
+}
+
+const getEmailValidator = (field: EmailField): FieldValidator => {
+  let schema = yup
+    .string()
+    .label(field.label ?? "Field")
+    .test("test-email", "Invalid email", (value) => {
+      return !value || EmailValidator.validate(value)
+    })
+    .test("test-domain", "Invalid email", (value) => {
+      // See the note in the server implementation on why this is done
+      if (value) {
+        const parts = value.split("@")
+        const domain = parts[parts.length - 1]
+        return psl.isValid(domain)
+      } else {
+        return false
+      }
+    })
 
   schema = field.optional ? schema : schema.required()
 
@@ -204,5 +235,6 @@ const filterUniqueItems = (v: number[] | undefined) => {
 }
 
 registerFieldType("text", getTextValidator)
+registerFieldType("email", getEmailValidator)
 registerFieldType("number", getNumberValidator)
 registerFieldType("select", getSelectValidator)

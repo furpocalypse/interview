@@ -197,10 +197,12 @@ test("select schemas cast values correctly", () => {
     },
   })
 
+  state.fields.field_0.handleChange(1)
+  expect(state.fields.field_0.validValue).toStrictEqual(1)
   state.fields.field_0.handleChange([1])
-  expect(state.fields.field_0.validValue).toStrictEqual([1])
+  expect(state.fields.field_0.validValue).toStrictEqual(1)
   state.fields.field_0.handleChange([])
-  expect(state.fields.field_0.validValue).toStrictEqual([])
+  expect(state.fields.field_0.validValue).toBeUndefined()
   state.fields.field_0.handleChange(undefined)
   expect(state.fields.field_0.validValue).toBeUndefined()
 })

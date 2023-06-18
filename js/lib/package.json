@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",
+    "@types/psl": "^1.1.0",
     "@typescript-eslint/eslint-plugin": "^5.59.0",
     "@typescript-eslint/parser": "^5.59.0",
     "@typescript-eslint/typescript-estree": "^5.59.0",
@@ -34,7 +35,9 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "email-validator": "^2.0.4",
     "mobx": "^6.7.0",
+    "psl": "^1.9.0",
     "wretch": "^2.4.1",
     "yup": "^1.0.0"
   }
