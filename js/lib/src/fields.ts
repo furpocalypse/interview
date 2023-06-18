@@ -320,10 +320,24 @@ const getDateValidator = (field: DateField): FieldValidator => {
     })
 
   if (!field.optional) {
-    schema = schema.defined()
+    schema = schema.required()
   }
 
-  return yupValidator(schema)
+  const validator = yupValidator(schema)
+
+  const toString: FieldValidator = (value) => {
+    const [valid, res] = validator(value)
+    if (!valid) {
+      return [valid, res]
+    } else {
+      return [
+        true,
+        res != null ? formatDate(res as unknown as Date) : undefined,
+      ]
+    }
+  }
+
+  return toString
 }
 
 /**
@@ -376,6 +390,24 @@ export const compareDate = (a: Date, b: Date): number => {
   }
 
   return a.getDate() - b.getDate()
+}
+
+/**
+ * Simple date format.
+ */
+export const formatDate = (d: Date): string => {
+  return `${pad(d.getFullYear(), 4)}-${pad(d.getMonth() + 1, 2)}-${pad(
+    d.getDate(),
+    2
+  )}`
+}
+
+const pad = (n: number, l: number): string => {
+  let val = n.toString()
+  while (val.length < l) {
+    val = "0" + val
+  }
+  return val
 }
 
 registerFieldType("text", getTextValidator)

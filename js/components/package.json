@@ -35,7 +35,6 @@
     "dist/**/*"
   ],
   "devDependencies": {
-    "webpack": "^5.80.0",
     "@babel/core": "^7.20.12",
     "@storybook/addon-essentials": "^7.0.6",
     "@storybook/addon-interactions": "^7.0.6",
@@ -56,7 +55,8 @@
     "eslint-plugin-storybook": "^0.6.10",
     "prop-types": "^15.8.1",
     "storybook": "^7.0.6",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "webpack": "^5.80.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -65,16 +65,18 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "dayjs": "^1.11.8",
     "markdown-it": "^13.0.1"
   },
   "peerDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "mobx": "^6.7.0",
-    "mobx-react-lite": "^3.4.0",
     "@emotion/react": "^11.10.5",
     "@mantine/core": "^6.0.7",
+    "@mantine/dates": "^6.0.13",
     "@mantine/hooks": "^6.0.7",
-    "@oes/interview-lib": "^0.1.0"
+    "@oes/interview-lib": "^0.1.0",
+    "mobx": "^6.7.0",
+    "mobx-react-lite": "^3.4.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }

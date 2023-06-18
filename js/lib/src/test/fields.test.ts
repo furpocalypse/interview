@@ -88,12 +88,9 @@ test("date field validates correctly", () => {
     optional: true,
   })
 
-  expect(validator(new Date(2020, 6, 4))).toStrictEqual([
-    true,
-    new Date(2020, 6, 4),
-  ])
-  expect(validator("2020-07-04")).toStrictEqual([true, new Date(2020, 6, 4)])
-  expect(validator("2020-07-05")).toStrictEqual([true, new Date(2020, 6, 5)])
+  expect(validator(new Date(2020, 6, 4))).toStrictEqual([true, "2020-07-04"])
+  expect(validator("2020-07-04")).toStrictEqual([true, "2020-07-04"])
+  expect(validator("2020-07-05")).toStrictEqual([true, "2020-07-05"])
   expect(validator("2020-07-03")[0]).toStrictEqual(false)
   expect(validator("2020-07-07")[0]).toStrictEqual(false)
   expect(validator("2021-07-05")[0]).toStrictEqual(false)
