@@ -50,6 +50,18 @@ class AskField(ABC):
         """The default value (used by frontends)."""
         ...
 
+    @property
+    @abstractmethod
+    def require_value(self) -> Optional[Any]:
+        """Require a specific value."""
+        ...
+
+    @property
+    @abstractmethod
+    def require_value_message(self) -> Optional[str]:
+        """A specific error message for the required value."""
+        ...
+
 
 @frozen
 class _BaseAskField(AskField):
@@ -57,6 +69,8 @@ class _BaseAskField(AskField):
     optional: bool = False
     default: Any = None
     label: Optional[str] = None
+    require_value: Optional[Any] = None
+    require_value_message: Optional[str] = None
 
 
 class AbstractField(ABC):
@@ -91,6 +105,18 @@ class AbstractField(ABC):
     @abstractmethod
     def label(self) -> Optional[Template]:
         """The field label."""
+        ...
+
+    @property
+    @abstractmethod
+    def require_value(self) -> Optional[Any]:
+        """A specific required value."""
+        ...
+
+    @property
+    @abstractmethod
+    def require_value_message(self) -> Optional[str]:
+        """A specific error message for the required value."""
         ...
 
     @abstractmethod
@@ -133,6 +159,8 @@ class FieldBase(AbstractField, ABC):
         """Re-usable validator for checking for required values."""
         if not self.optional and v is None:
             raise ValueError(f"{a.name}: a value is required")
+        if v is not None and self.require_value is not None and v != self.require_value:
+            raise ValueError(f"{a.name}: {self.require_value_message or 'Required'}")
 
 
 def get_field_name(idx: int, field: AbstractField) -> str:

@@ -18,6 +18,8 @@ class TextAskField(AskField):
     optional: bool = False
     default: Optional[str] = None
     label: Optional[str] = None
+    require_value: Optional[str] = None
+    require_value_message: Optional[str] = None
 
     min: int = 0
     """Minimum length."""
@@ -52,11 +54,13 @@ def _coerce_none(value):
 class TextField(FieldBase):
     """Text field."""
 
-    type: Literal["text"]
+    type: Literal["text"] = "text"
     set: Optional[Location] = None
     optional: bool = False
     default: Optional[str] = None
     label: Optional[Template] = None
+    require_value: Optional[str] = None
+    require_value_message: Optional[str] = None
 
     min: int = field(default=0, validator=[validators.ge(0)])
     """Minimum length."""
@@ -93,11 +97,9 @@ class TextField(FieldBase):
             input_mode=self.input_mode,
             autocomplete=self.autocomplete,
             regex=self.regex_js or self.regex or None,
+            require_value=self.require_value,
+            require_value_message=self.require_value_message,
         )
-
-    def _check_non_null(self, instance, attribute, value):
-        if not self.optional and value is None:
-            raise ValueError(f"{attribute.name}: A value is required")
 
     def _check_regex(self, regex, instance, attribute, value):
         if regex is not None and not regex.match(value):
@@ -110,7 +112,7 @@ class TextField(FieldBase):
             type=self.get_optional_type(),
             converter=pipe(_strip_strings, _coerce_none),
             validator=[
-                self._check_non_null,
+                self.validate_required,
                 validators.optional(
                     [
                         validators.min_len(self.min),

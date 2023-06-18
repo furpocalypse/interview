@@ -17,6 +17,9 @@ class NumberAskField(AskField):
     default: Optional[float] = None
     label: Optional[str] = None
 
+    require_value: Optional[float] = None
+    require_value_message: Optional[str] = None
+
     min: Optional[float] = None
     """The minimum value."""
 
@@ -37,7 +40,7 @@ class NumberAskField(AskField):
 class NumberField(FieldBase):
     """Number field."""
 
-    type: Literal["number"]
+    type: Literal["number"] = "number"
     set: Optional[Location] = None
     optional: bool = False
     default: Optional[float] = None
@@ -58,6 +61,9 @@ class NumberField(FieldBase):
     autocomplete: Optional[str] = None
     """The autocomplete type for this field's input."""
 
+    require_value: Optional[float] = None
+    require_value_message: Optional[str] = None
+
     def get_python_type(self) -> object:
         return int if self.integer else float
 
@@ -72,6 +78,8 @@ class NumberField(FieldBase):
             integer=self.integer,
             input_mode=self.input_mode,
             autocomplete=self.autocomplete,
+            require_value=self.require_value,
+            require_value_message=self.require_value_message,
         )
 
     def get_field_info(self) -> Any:
@@ -85,5 +93,8 @@ class NumberField(FieldBase):
 
         return attr.ib(
             type=self.get_optional_type(),
-            validator=v,
+            validator=[
+                self.validate_required,
+                validators.optional(v),
+            ],
         )

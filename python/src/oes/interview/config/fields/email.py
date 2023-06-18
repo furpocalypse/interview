@@ -21,17 +21,21 @@ class EmailAskField(AskField):
     optional: bool = False
     default: Optional[str] = None
     label: Optional[str] = None
+    require_value: Optional[str] = None
+    require_value_message: Optional[str] = None
 
 
 @frozen
 class EmailField(FieldBase):
     """Email field."""
 
-    type: Literal["email"]
+    type: Literal["email"] = "email"
     set: Optional[Location] = None
     optional: bool = False
     default: Optional[str] = None
     label: Optional[Template] = None
+    require_value: Optional[str] = None
+    require_value_message: Optional[str] = None
 
     def get_python_type(self) -> object:
         return str
@@ -42,18 +46,16 @@ class EmailField(FieldBase):
             optional=self.optional,
             default=self.default,
             label=self.label.render(**context) if self.label else None,
+            require_value=self.require_value,
+            require_value_message=self.require_value_message,
         )
-
-    def _check_non_null(self, instance, attribute, value):
-        if not self.optional and value is None:
-            raise ValueError(f"{attribute.name}: A value is required")
 
     def get_field_info(self) -> Any:
         return attr.ib(
             type=self.get_optional_type(),
             converter=pipe(_strip, _coerce_none),
             validator=[
-                self._check_non_null,
+                self.validate_required,
                 validators.optional(
                     [
                         _validate_email,

@@ -16,6 +16,8 @@ class BoolAskField(AskField):
     optional: bool = False
     default: Optional[bool] = None
     label: Optional[str] = None
+    require_value: Optional[bool] = None
+    require_value_message: Optional[str] = None
 
 
 @frozen
@@ -27,6 +29,8 @@ class BoolField(FieldBase):
     optional: bool = False
     default: Optional[bool] = None
     label: Optional[Template] = None
+    require_value: Optional[bool] = None
+    require_value_message: Optional[str] = None
 
     def get_python_type(self) -> object:
         return bool
@@ -45,4 +49,6 @@ class BoolField(FieldBase):
             optional=self.optional,
             default=self.default,
             label=self.label.render(**context) if self.label else None,
+            require_value=self.require_value,
+            require_value_message=self.require_value_message,
         )

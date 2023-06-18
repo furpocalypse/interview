@@ -19,6 +19,8 @@ class DateAskField(AskField):
     label: Optional[str] = None
     min: Optional[date] = None
     max: Optional[date] = None
+    require_value: Optional[date] = None
+    require_value_message: Optional[str] = None
 
 
 @frozen
@@ -33,6 +35,9 @@ class DateField(FieldBase):
     """A default value, or ``"today"`` to use the current date."""
 
     label: Optional[Template] = None
+
+    require_value: Optional[date] = None
+    require_value_message: Optional[str] = None
 
     min: Optional[Union[date, Literal["today"]]] = None
     """A minimum value, or ``"today"`` to use the current date."""
@@ -84,4 +89,6 @@ class DateField(FieldBase):
             label=self.label.render(**context) if self.label else None,
             min=self._get_date(self.min),
             max=self._get_date(self.max),
+            require_value=self.require_value,
+            require_value_message=self.require_value_message,
         )
