@@ -24,6 +24,7 @@
     "dist/**/*"
   ],
   "devDependencies": {
+    "webpack": "^5.80.0",
     "@babel/core": "^7.20.12",
     "@storybook/addon-essentials": "^7.0.6",
     "@storybook/addon-interactions": "^7.0.6",
@@ -53,18 +54,16 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@oes/interview-lib": "^0.1.0",
-    "markdown-it": "^13.0.1",
-    "mobx": "^6.7.0",
-    "mobx-react-lite": "^3.4.0",
-    "yup": "^1.0.0"
+    "markdown-it": "^13.0.1"
   },
   "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "mobx": "^6.7.0",
+    "mobx-react-lite": "^3.4.0",
     "@emotion/react": "^11.10.5",
     "@mantine/core": "^6.0.7",
     "@mantine/hooks": "^6.0.7",
-    "react": "^18.2.0",
-    "webpack": "^5.80.0",
-    "react-dom": "^18.2.0"
+    "@oes/interview-lib": "^0.1.0"
   }
 }
