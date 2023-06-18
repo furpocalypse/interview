@@ -74,6 +74,7 @@ mypy_path = "$MYPY_CONFIG_FILE_DIR/src"
 text = "oes.interview.config.fields.text:TextField"
 email = "oes.interview.config.fields.email:EmailField"
 number = "oes.interview.config.fields.number:NumberField"
+bool = "oes.interview.config.fields.bool:BoolField"
 select = "oes.interview.config.fields.select:SelectField"
 date = "oes.interview.config.fields.date:DateField"
 
