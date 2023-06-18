@@ -23,7 +23,9 @@ const questionStyles = createStyles({
     display: "flex",
     alignItems: "stretch",
   },
-  stack: {},
+  stack: {
+    flex: "auto",
+  },
   markdown: {},
   questionFields: {
     flex: "auto",
