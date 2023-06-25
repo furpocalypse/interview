@@ -110,6 +110,19 @@ def structure_location(v, t):
 
 converter.register_structure_hook(Location, structure_location)
 
+
+def structure_int_or_sequence(c, v):
+    if v is None or isinstance(v, int):
+        return v
+    else:
+        return c.structure(v, Sequence[int])
+
+
+converter.register_structure_hook(
+    Union[int, Sequence[int], None],
+    lambda v, t: structure_int_or_sequence(converter, v),
+)
+
 # Logic and templates
 
 converter.register_structure_hook(Template, lambda v, t: structure_template(v))

@@ -4,3 +4,15 @@
   fields:
     - set: test1
       type: text
+
+- id: test2
+  title: Test Question 2
+  fields:
+    - set: test2
+      type: select
+      default: 0
+      options:
+        - value: 1
+          label: Option 1
+        - value: 2
+          label: Option 2

@@ -16,6 +16,7 @@ def test_parse_questions():
 
     interview = converter.structure(obj, Interview)
     assert interview.question_bank.get_question("test1") is not None
+    assert interview.question_bank.get_question("test2") is not None
     assert interview.question_bank.get_question("test_not_found") is None
 
 
