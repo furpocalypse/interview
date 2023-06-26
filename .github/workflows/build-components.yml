@@ -1,6 +1,8 @@
 name: Build JS components package
 on:
-  push: {}
+  push:
+    tags:
+      - js/components/v**
 jobs:
   build:
     runs-on: ubuntu-latest
