@@ -1,8 +1,6 @@
 name: Build server container
 on:
-  push:
-    tags:
-      - js/components/v**
+  push: {}
 jobs:
   build:
     runs-on: ubuntu-latest
