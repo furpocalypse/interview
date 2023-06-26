@@ -1,6 +1,6 @@
 {
   "name": "@open-event-systems/interview-components",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "OES Interview React components",
   "license": "LGPL-3.0-or-later",
   "author": "Wes <wes@anthronewengland.com>",
@@ -19,14 +19,15 @@
         "./src/*.ts",
         "./dist/*.js"
       ],
-      "default": "./dist/*"
+      "default": "./dist/*.js"
     }
   },
   "imports": {
     "#src/*.js": {
       "webpack": [
         "./src/*.tsx",
-        "./src/*.ts"
+        "./src/*.ts",
+        "./dist/*.js"
       ],
       "default": "./dist/*.js"
     }
