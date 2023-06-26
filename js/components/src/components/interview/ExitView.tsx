@@ -10,7 +10,7 @@ import {
   StackProps,
   useComponentDefaultProps,
 } from "@mantine/core"
-import { ExitResult } from "@oes/interview-lib"
+import { ExitResult } from "@open-event-systems/interview-lib"
 import { Markdown } from "#src/components/Markdown.js"
 
 const exitStyles = createStyles({

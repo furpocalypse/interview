@@ -1,4 +1,4 @@
-import { AskResult, FormState } from "@oes/interview-lib"
+import { AskResult, FormState } from "@open-event-systems/interview-lib"
 import { TextField } from "#src/components/fields/TextField.js"
 import { useState } from "react"
 import { InterviewFormContext } from "#src/components/form/Form.js"

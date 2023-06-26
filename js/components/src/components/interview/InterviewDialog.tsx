@@ -6,7 +6,10 @@ import {
   Selectors,
   useComponentDefaultProps,
 } from "@mantine/core"
-import { FormValues, InterviewStateStore } from "@oes/interview-lib"
+import {
+  FormValues,
+  InterviewStateStore,
+} from "@open-event-systems/interview-lib"
 import { observer } from "mobx-react-lite"
 import { ExitView, ExitViewProps } from "#src/components/interview/ExitView.js"
 import {

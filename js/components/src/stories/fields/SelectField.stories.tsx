@@ -1,5 +1,5 @@
 import { Box } from "@mantine/core"
-import { AskResult, FormState } from "@oes/interview-lib"
+import { AskResult, FormState } from "@open-event-systems/interview-lib"
 import { InterviewFormContext } from "#src/components/form/Form.js"
 import { SelectField } from "#src/components/fields/SelectField.js"
 
