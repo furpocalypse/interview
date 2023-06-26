@@ -13,7 +13,7 @@ jobs:
           cache: npm
           cache-dependency-path: js/package-lock.json
           registry-url: https://npm.pkg.github.com
-          scope: "@oes"
+          scope: "@Open-Event-Systems"
       - run: |
           npm ci
           npm -w lib run build
