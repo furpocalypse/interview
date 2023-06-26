@@ -1,6 +1,8 @@
 name: Build server container
 on:
-  push: {}
+  push:
+    paths:
+      - python/**
 jobs:
   build:
     runs-on: ubuntu-latest

@@ -14,14 +14,14 @@ jobs:
         with:
           cache: npm
           cache-dependency-path: js/package-lock.json
-          registry-url: https://npm.pkg.github.com
+          registry-url: https://registry.npmjs.org/
           scope: "@open-event-systems"
       - run: |
           npm ci
           npm -w lib run build
         working-directory: js
 
-      - run: npm -w lib publish
+      - run: npm -w lib publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{ github.token }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         working-directory: js
