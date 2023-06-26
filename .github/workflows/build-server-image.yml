@@ -19,4 +19,4 @@ jobs:
         with:
           context: python
           push: true
-          tags: latest
+          tags: open-event-systems/interview-server:latest
