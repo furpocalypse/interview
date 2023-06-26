@@ -9,7 +9,7 @@ import {
 import {
   FormValues,
   InterviewStateStore,
-} from "@Open-Event-Systems/interview-lib"
+} from "@open-event-systems/interview-lib"
 import { observer } from "mobx-react-lite"
 import { ExitView, ExitViewProps } from "#src/components/interview/ExitView.js"
 import {

@@ -10,7 +10,7 @@ import {
   Button,
   FormState,
   FormValues,
-} from "@Open-Event-Systems/interview-lib"
+} from "@open-event-systems/interview-lib"
 import { action, runInAction } from "mobx"
 import { observer, useLocalObservable } from "mobx-react-lite"
 import { createContext, FormHTMLAttributes, ReactNode } from "react"

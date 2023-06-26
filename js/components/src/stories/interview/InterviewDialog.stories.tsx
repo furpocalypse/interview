@@ -2,7 +2,7 @@ import {
   AskResult,
   ExitResult,
   InterviewStateStore,
-} from "@Open-Event-Systems/interview-lib"
+} from "@open-event-systems/interview-lib"
 import { useState } from "react"
 import { InterviewDialog } from "#src/components/interview/InterviewDialog.js"
 

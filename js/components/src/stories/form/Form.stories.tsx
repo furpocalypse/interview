@@ -1,4 +1,4 @@
-import { AskField, Button } from "@Open-Event-Systems/interview-lib"
+import { AskField, Button } from "@open-event-systems/interview-lib"
 import { InterviewForm } from "#src/components/form/Form.js"
 import { Meta } from "@storybook/react"
 import { QuestionFields } from "#src/components/form/QuestionFields.js"
