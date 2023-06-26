@@ -6,7 +6,7 @@ import {
   StackProps,
   useComponentDefaultProps,
 } from "@mantine/core"
-import { AskResult, FormValues } from "@oes/interview-lib"
+import { AskResult, FormValues } from "@Open-Event-Systems/interview-lib"
 import { InterviewForm } from "#src/components/form/Form.js"
 import {
   FormButtons,

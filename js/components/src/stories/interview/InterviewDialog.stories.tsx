@@ -1,4 +1,8 @@
-import { AskResult, ExitResult, InterviewStateStore } from "@oes/interview-lib"
+import {
+  AskResult,
+  ExitResult,
+  InterviewStateStore,
+} from "@Open-Event-Systems/interview-lib"
 import { useState } from "react"
 import { InterviewDialog } from "#src/components/interview/InterviewDialog.js"
 

@@ -12,7 +12,7 @@ import {
   StackProps,
   useComponentDefaultProps,
 } from "@mantine/core"
-import { AskField, FieldState } from "@oes/interview-lib"
+import { AskField, FieldState } from "@Open-Event-Systems/interview-lib"
 import { observer } from "mobx-react-lite"
 import { useContext } from "react"
 import { InterviewFormContext } from "#src/components/form/Form.js"

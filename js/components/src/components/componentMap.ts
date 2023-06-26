@@ -1,4 +1,4 @@
-import { AskFieldTypes } from "@oes/interview-lib"
+import { AskFieldTypes } from "@Open-Event-Systems/interview-lib"
 import { ComponentType } from "react"
 import { NumberField } from "#src/components/fields/NumberField.js"
 import { SelectField } from "#src/components/fields/SelectField.js"

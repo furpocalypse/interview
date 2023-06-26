@@ -8,7 +8,7 @@ import {
   Selectors,
   useComponentDefaultProps,
 } from "@mantine/core"
-import { Button as IButton } from "@oes/interview-lib"
+import { Button as IButton } from "@Open-Event-Systems/interview-lib"
 import { observer } from "mobx-react-lite"
 import { useContext } from "react"
 import { InterviewFormContext } from "#src/components/form/Form.js"

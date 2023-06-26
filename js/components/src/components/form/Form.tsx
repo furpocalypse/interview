@@ -5,7 +5,12 @@ import {
   Selectors,
   useComponentDefaultProps,
 } from "@mantine/core"
-import { AskField, Button, FormState, FormValues } from "@oes/interview-lib"
+import {
+  AskField,
+  Button,
+  FormState,
+  FormValues,
+} from "@Open-Event-Systems/interview-lib"
 import { action, runInAction } from "mobx"
 import { observer, useLocalObservable } from "mobx-react-lite"
 import { createContext, FormHTMLAttributes, ReactNode } from "react"

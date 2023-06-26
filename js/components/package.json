@@ -1,5 +1,5 @@
 {
-  "name": "@oes/interview-components",
+  "name": "@Open-Event-Systems/interview-components",
   "version": "0.1.0",
   "description": "OES Interview React components",
   "license": "LGPL-3.0-or-later",
@@ -73,7 +73,7 @@
     "@mantine/core": "^6.0.7",
     "@mantine/dates": "^6.0.13",
     "@mantine/hooks": "^6.0.7",
-    "@oes/interview-lib": "^0.1.0",
+    "@Open-Event-Systems/interview-lib": "^0.1.0",
     "mobx": "^6.7.0",
     "mobx-react-lite": "^3.4.0",
     "react": "^18.2.0",
