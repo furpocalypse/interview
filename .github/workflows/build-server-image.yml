@@ -15,14 +15,8 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ github.token }}
 
-      - id: meta
-        uses: docker/metadata-action@v4.6.0
-        with:
-          images: ghcr.io/open-event-systems/interview-server
-
       - uses: docker/build-push-action@v4.1.1
         with:
-          context: .
+          context: python
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: latest
