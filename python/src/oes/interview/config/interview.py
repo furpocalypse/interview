@@ -16,6 +16,7 @@ from oes.interview.parsing.template import default_jinja2_env
 from oes.interview.parsing.types import validate_identifier
 from oes.template import jinja2_env_context
 from ruamel.yaml import YAML
+from typing_extensions import TypeAlias
 
 yaml = YAML(typ="safe")
 
@@ -30,7 +31,7 @@ config_path_context: ContextVar[Optional[Path]] = ContextVar(
 """Config file path context var."""
 
 
-InterviewQuestion = Union[Question, Path]
+InterviewQuestion: TypeAlias = Union[Question, Path]
 
 
 def _build_question_bank(interview: Interview):
@@ -73,7 +74,7 @@ class Interview:
                 raise ValueError(f"Question ID not found: {step.ask}")
 
 
-InterviewEntry = Union[Interview, Path]
+InterviewEntry: TypeAlias = Union[Interview, Path]
 
 
 def _read_interviews(obj: InterviewEntry) -> Iterable[Interview]:

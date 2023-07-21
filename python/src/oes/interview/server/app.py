@@ -4,6 +4,7 @@ from ipaddress import IPv4Network, IPv6Network
 from blacksheep import Application
 from blacksheep.server.openapi.v3 import OpenAPIHandler
 from blacksheep.server.remotes.forwarding import XForwardedHeadersMiddleware
+from httpx import AsyncClient
 from oes.interview.config.interview import (
     InterviewConfig,
     interviews_context,
@@ -59,6 +60,8 @@ async def on_start(app: Application):
 
     interviews = load_interview_config(settings.config_file)
     app.services.add_instance(interviews)
+
+    app.services.add_instance(AsyncClient())
 
 
 async def context_middleware(request, handler):

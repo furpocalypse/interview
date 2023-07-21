@@ -2,10 +2,11 @@
 from __future__ import annotations
 
 import re
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from typing import Any
 
 from oes.template import Condition, evaluate
+from typing_extensions import Protocol
 
 IDENTIFIER_PATTERN = r"^(?![0-9_-])[a-zA-Z0-9_-]+(?<!-)$"
 """Valid identifiers pattern.
@@ -21,7 +22,7 @@ def validate_identifier(instance, attribute, value: str):
         raise ValueError(f"Invalid identifier: {value}")
 
 
-class Whenable(ABC):
+class Whenable(Protocol):
     """Type with a ``when`` condition."""
 
     @property
