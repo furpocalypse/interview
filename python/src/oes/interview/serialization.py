@@ -6,6 +6,7 @@ from attrs import Attribute, fields
 from cattrs import override
 from cattrs.gen import make_dict_structure_fn, make_dict_unstructure_fn
 from cattrs.preconf.orjson import make_converter
+from oes.hook import ExecutableHookConfig, PythonHookConfig
 from oes.interview.config.field import (
     AbstractField,
     AskField,
@@ -20,12 +21,14 @@ from oes.interview.config.interview import (
     parse_question_entry,
 )
 from oes.interview.config.question import Question
-from oes.interview.config.step import StepOrBlock
+from oes.interview.config.step import StepOrBlock, StepResult, URLOnlyHttpHookConfig
 from oes.interview.config.step import Value as StepValue
 from oes.interview.config.step import (
     ValueOrExpression,
     ValueTypes,
+    parse_hook_config,
     parse_step,
+    parse_step_result,
     parse_value,
 )
 from oes.interview.parsing.location import Location
@@ -110,6 +113,19 @@ def structure_location(v, t):
 
 converter.register_structure_hook(Location, structure_location)
 
+
+def structure_int_or_sequence(c, v):
+    if v is None or isinstance(v, int):
+        return v
+    else:
+        return c.structure(v, Sequence[int])
+
+
+converter.register_structure_hook(
+    Union[int, Sequence[int], None],
+    lambda v, t: structure_int_or_sequence(converter, v),
+)
+
 # Logic and templates
 
 converter.register_structure_hook(Template, lambda v, t: structure_template(v))
@@ -177,6 +193,14 @@ converter.register_structure_hook(
 )
 converter.register_structure_hook(StepValue, lambda v, t: parse_value(v))
 converter.register_structure_hook(StepOrBlock, lambda v, t: parse_step(converter, v))
+converter.register_structure_hook(
+    Union[PythonHookConfig, ExecutableHookConfig, URLOnlyHttpHookConfig],
+    lambda v, t: parse_hook_config(converter, v),
+)
+
+converter.register_structure_hook(
+    StepResult, lambda v, t: parse_step_result(converter, v)
+)
 
 # Interviews
 

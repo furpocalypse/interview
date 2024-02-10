@@ -6,7 +6,7 @@ import {
   Selectors,
   useComponentDefaultProps,
 } from "@mantine/core"
-import { AskField } from "@oes/interview-lib"
+import { AskField } from "@open-event-systems/interview-lib"
 import { observer } from "mobx-react-lite"
 import { Field } from "#src/components/fields/Field.js"
 

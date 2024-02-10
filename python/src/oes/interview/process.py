@@ -1,12 +1,13 @@
 """Interview process module."""
 import copy
-from collections.abc import Iterable
+from collections.abc import Awaitable, Callable, Iterable
 from typing import Any, Optional
 
 from attrs import evolve
+from oes.hook import HttpHookConfig
 from oes.interview.config.question import Question
 from oes.interview.config.question_bank import QuestionBank, question_bank_context
-from oes.interview.config.step import Step, StepResult, StepResultStatus
+from oes.interview.config.step import Step, StepResult, StepResultStatus, http_func_ctx
 from oes.interview.parsing.location import Location, UndefinedError
 from oes.interview.response import AskResult
 from oes.interview.state import InterviewState, InvalidStateError
@@ -125,7 +126,7 @@ def _apply_responses(
         return state
 
 
-def _handle_step_or_resolve_undefined(
+async def _handle_step_or_resolve_undefined(
     state: InterviewState, questions: QuestionBank, step: Step
 ) -> tuple[InterviewState, StepResult]:
     # Handle the step, or return an AskResult for a missing value
@@ -134,17 +135,19 @@ def _handle_step_or_resolve_undefined(
         if not step.when_matches(**state.template_context):
             return state, StepResultStatus.not_changed
 
-        return step.handle(state)
+        return await step.handle(state)
     except UndefinedError as e:
         return recursive_get_ask_for_variable(state, questions, e.location)
 
 
-def _process_steps(
+async def _process_steps(
     state: InterviewState, questions: QuestionBank
 ) -> tuple[InterviewState, StepResult]:
     # Walk through steps
     for step_wrapper in state.interview.flattened_steps:
-        state, res = _handle_step_or_resolve_undefined(state, questions, step_wrapper)
+        state, res = await _handle_step_or_resolve_undefined(
+            state, questions, step_wrapper
+        )
         if res is not StepResultStatus.not_changed:
             return state, res
 
@@ -152,11 +155,17 @@ def _process_steps(
     return state, StepResultStatus.completed
 
 
-def advance_interview_state(
+async def advance_interview_state(
     state: InterviewState,
     questions: QuestionBank,
     responses: Optional[dict[str, Any]] = None,
     button: Optional[int] = None,
+    http_func: Optional[
+        Callable[
+            [InterviewState, HttpHookConfig],
+            Awaitable[tuple[InterviewState, StepResult]],
+        ]
+    ] = None,
 ) -> tuple[InterviewState, StepResult]:
     """Advance the interview state.
 
@@ -165,6 +174,7 @@ def advance_interview_state(
         questions: The question bank.
         responses: The question responses, if provided.
         button: The button ID, if provided.
+        http_func: A coroutine to use for HTTP hooks.
 
     Returns:
         A tuple of the updated state and the step result.
@@ -175,14 +185,16 @@ def advance_interview_state(
 
     state = _apply_responses(state, questions, responses, button)
 
-    # set question bank context
+    # set question bank and http context
     token = question_bank_context.set(questions)
+    http_token = http_func_ctx.set(http_func)
     try:
         # process all steps in order. repeat every time a change is made.
         result: StepResult = StepResultStatus.changed
         while result is StepResultStatus.changed:
-            state, result = _process_steps(state, questions)
+            state, result = await _process_steps(state, questions)
     finally:
+        http_func_ctx.reset(http_token)
         question_bank_context.reset(token)
 
     return state, result

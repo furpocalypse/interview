@@ -262,8 +262,9 @@ def test_recursive_get_ask_for_variable_indexed_2(
     assert res.title == "q7"
 
 
+@pytest.mark.asyncio
 @empty_context
-def test_interview_1():
+async def test_interview_1():
     jinja2_env_context.set(default_jinja2_env)
     interviews = converter.structure(
         {
@@ -295,10 +296,10 @@ def test_interview_1():
         target_url="",
     )
 
-    state, res = advance_interview_state(state, interview.question_bank, None)
+    state, res = await advance_interview_state(state, interview.question_bank, None)
     assert isinstance(res, AskResult)
     assert state.question_id == "q1"
-    state, res = advance_interview_state(
+    state, res = await advance_interview_state(
         state, interview.question_bank, {"field_0": "a"}
     )
     assert isinstance(res, AskResult)
@@ -308,7 +309,7 @@ def test_interview_1():
     assert state.answered_question_ids == {"q1", "q2"}
     assert state.question_id == "q2"
 
-    state, res = advance_interview_state(
+    state, res = await advance_interview_state(
         state, interview.question_bank, {"field_0": "b"}
     )
     assert res is StepResultStatus.completed
@@ -317,8 +318,9 @@ def test_interview_1():
     assert state.data == {"a": "a", "b": "b"}
 
 
+@pytest.mark.asyncio
 @empty_context
-def test_interview_2():
+async def test_interview_2():
     jinja2_env_context.set(default_jinja2_env)
     interviews = converter.structure(
         {
@@ -358,7 +360,7 @@ def test_interview_2():
     )
 
     # skips q1 since the value is already set
-    state, res = advance_interview_state(state, interview.question_bank, None)
+    state, res = await advance_interview_state(state, interview.question_bank, None)
     assert isinstance(res, AskResult)
     assert state.question_id == "q2"
 
@@ -367,13 +369,13 @@ def test_interview_2():
 
     # Invalid response
     with pytest.raises(BaseValidationError):
-        advance_interview_state(
+        await advance_interview_state(
             state,
             interview.question_bank,
             {"field_0": None},
         )
 
-    state, res = advance_interview_state(
+    state, res = await advance_interview_state(
         state, interview.question_bank, {"field_0": "b"}
     )
 
@@ -385,11 +387,12 @@ def test_interview_2():
 
     # Can't continue after finished
     with pytest.raises(InvalidStateError):
-        advance_interview_state(state, interview.question_bank, {"field_0": "b"})
+        await advance_interview_state(state, interview.question_bank, {"field_0": "b"})
 
 
+@pytest.mark.asyncio
 @empty_context
-def test_interview_3():
+async def test_interview_3():
     jinja2_env_context.set(default_jinja2_env)
     interviews = converter.structure(
         {"interviews": [{"id": "int1", "questions": [], "steps": [{"exit": "test"}]}]},
@@ -407,5 +410,5 @@ def test_interview_3():
         target_url="",
     )
 
-    state, res = advance_interview_state(state, interview.question_bank, None)
+    state, res = await advance_interview_state(state, interview.question_bank, None)
     assert isinstance(res, ExitResult)

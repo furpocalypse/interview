@@ -2,8 +2,9 @@
 from __future__ import annotations
 
 from builtins import bool
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import Any, Awaitable, Optional
 
 from attrs import frozen
 from blacksheep import FromJSON, HTTPException, Request
@@ -15,7 +16,10 @@ from blacksheep.server.openapi.common import (
     ResponseInfo,
 )
 from cattrs import BaseValidationError
+from httpx import AsyncClient
+from oes.hook import HttpHookConfig
 from oes.interview.config.interview import InterviewConfig
+from oes.interview.config.step import HookResult, StepResult, StepResultStatus
 from oes.interview.process import advance_interview_state
 from oes.interview.response import create_state_response
 from oes.interview.serialization import converter
@@ -116,6 +120,7 @@ async def update_interview_state(
     body: FromJSON[dict[str, Any]],
     interview_config: InterviewConfig,
     settings: Settings,
+    client: AsyncClient,
 ):
     """Update an interview state.
 
@@ -142,11 +147,12 @@ async def update_interview_state(
         raise HTTPException(422, "Interview not found")
 
     try:
-        state, result = advance_interview_state(
+        state, result = await advance_interview_state(
             state,
             interview.question_bank,
             update_request.responses,
             update_request.button,
+            _make_http_func(client),
         )
     except BaseValidationError:
         raise HTTPException(422, "Invalid response values")
@@ -161,3 +167,24 @@ async def update_interview_state(
     )
 
     return converter.unstructure(response)
+
+
+def _make_http_func(
+    client: AsyncClient,
+) -> Callable[
+    [InterviewState, HttpHookConfig], Awaitable[tuple[InterviewState, StepResult]]
+]:
+    async def http_func(
+        state: InterviewState, config: HttpHookConfig
+    ) -> tuple[InterviewState, StepResult]:
+        state_dict = converter.unstructure(state)
+        res = await client.post(config.url, json=state_dict)
+        res.raise_for_status()
+        if res.status_code == 204:
+            return state, StepResultStatus.not_changed
+        else:
+            body = res.json()
+            updated_state = converter.structure(body, HookResult)
+            return updated_state.state, updated_state.result
+
+    return http_func

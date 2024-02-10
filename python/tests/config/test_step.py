@@ -1,13 +1,42 @@
+from datetime import datetime, timedelta
+
+import pytest
+from attrs import evolve
+from oes.hook import HttpHookConfig
 from oes.interview.config.step import (
     Ask,
     Block,
     Eval,
     Exit,
+    Hook,
+    HookResult,
     Set,
     StepOrBlock,
     flatten_steps,
+    http_func_ctx,
 )
+from oes.interview.response import ExitResult
 from oes.interview.serialization import converter
+from oes.interview.state import InterviewState
+
+
+def hook_func(state: InterviewState):
+    updated = evolve(state, data={"test": True})
+
+    return updated, ExitResult("hook")
+
+
+async def http_hook_func(state: InterviewState, config: HttpHookConfig):
+    assert config.url == "http://localhost/hook"
+
+    data = converter.unstructure(state)
+
+    data["data"]["test"] = True
+
+    result_dict = {"state": data, "result": {"type": "exit", "title": "Exit"}}
+
+    obj = converter.structure(result_dict, HookResult)
+    return obj.state, obj.result
 
 
 def test_step_parse():
@@ -55,3 +84,61 @@ def test_flatten_blocks_when_2():
     steps = converter.structure(step_list, list[StepOrBlock])
     flattened = flatten_steps(steps)
     assert flattened[0].when_matches()
+
+
+@pytest.mark.asyncio
+async def test_hooks_1():
+    step_list = [
+        {
+            "hook": {
+                "python": "tests.config.test_step:hook_func",
+            }
+        }
+    ]
+
+    steps = converter.structure(step_list, list[StepOrBlock])
+    assert isinstance(steps[0], Hook)
+
+    state = InterviewState(
+        submission_id="1",
+        interview_id="hooks",
+        interview_version="1",
+        expiration_date=datetime.now().astimezone() + timedelta(hours=1),
+        target_url="http://localhost",
+    )
+
+    expected_state = evolve(state, data={"test": True})
+
+    res = await steps[0].handle(state)
+    assert res == (expected_state, ExitResult("hook"))
+
+
+@pytest.mark.asyncio
+async def test_hooks_2():
+    step_list = [
+        {
+            "hook": {
+                "url": "http://localhost/hook",
+            }
+        }
+    ]
+
+    steps = converter.structure(step_list, list[StepOrBlock])
+    assert isinstance(steps[0], Hook)
+
+    state = InterviewState(
+        submission_id="1",
+        interview_id="hooks",
+        interview_version="1",
+        expiration_date=datetime.now().astimezone() + timedelta(hours=1),
+        target_url="http://localhost",
+    )
+
+    expected_state = evolve(state, data={"test": True})
+
+    token = http_func_ctx.set(http_hook_func)
+    try:
+        res = await steps[0].handle(state)
+        assert res == (expected_state, ExitResult("Exit"))
+    finally:
+        http_func_ctx.reset(token)

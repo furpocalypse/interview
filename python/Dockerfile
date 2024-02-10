@@ -14,7 +14,7 @@ COPY README.md ./
 COPY src/ src/
 RUN /app/bin/pip install --no-cache-dir .[server]
 
-FROM base AS target
+FROM base AS interview-server
 RUN adduser -h /app -H -D python \
     && mkdir /config
 COPY --from=build /app/ /app/

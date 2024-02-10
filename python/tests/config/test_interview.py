@@ -10,12 +10,13 @@ def test_parse_questions():
     obj = {
         "id": "test",
         "title": "Test Interview",
-        "questions": [Path("tests/data/questions.yml")],
-        "steps": [{"ask": "test1"}],
+        "questions": [Path("tests/test_data/questions.yml")],
+        "steps": [{"ask": "name"}],
     }
 
     interview = converter.structure(obj, Interview)
-    assert interview.question_bank.get_question("test1") is not None
+    assert interview.question_bank.get_question("name") is not None
+    assert interview.question_bank.get_question("optional-text") is not None
     assert interview.question_bank.get_question("test_not_found") is None
 
 
@@ -23,7 +24,7 @@ def test_parse_no_file():
     obj = {
         "id": "test",
         "title": "Test Interview",
-        "questions": [Path("tests/data/not_found.yml")],
+        "questions": [Path("tests/test_data/not_found.yml")],
         "steps": [],
     }
 
@@ -35,7 +36,7 @@ def test_parse_questions_missing():
     obj = {
         "id": "test",
         "title": "Test Interview",
-        "questions": [Path("tests/data/questions.yml")],
+        "questions": [Path("tests/test_data/questions.yml")],
         "steps": [{"ask": "test_not_found"}],
     }
 

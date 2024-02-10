@@ -16,3 +16,11 @@ interviews:
     steps:
       - exit: Required
         when: not optional_text
+
+  - id: hooks
+    title: Hooks
+    questions:
+      - questions.yml
+    steps:
+      - hook:
+          python: tests.config.test_step:hook_func
